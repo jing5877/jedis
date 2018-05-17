@@ -334,6 +334,26 @@ public class BinaryClient extends Connection {
   public void lpop(final byte[] key) {
     sendCommand(LPOP, key);
   }
+  
+  public void kpop(final byte[] key, final byte[]... strings) {
+	  sendCommand(KPOP, joinParameters(key, strings));
+  }
+  
+  public void kpop(final byte[] key) {
+	  sendCommand(KPOP, key);
+  }
+  
+  public void kpush(final byte[] key, final byte[] value) {
+	  sendCommand(Command.KPUSH, key, value);
+  }
+  
+  public void kpartitions(final byte[] key) {
+	  sendCommand(Command.KPARTITIONS, key);
+  }
+  
+  public void koffset(final byte[] key, final byte[]... strings) {
+	  sendCommand(Command.KOFFSET, joinParameters(key, strings));
+  }
 
   public void rpop(final byte[] key) {
     sendCommand(RPOP, key);

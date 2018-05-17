@@ -1,10 +1,6 @@
 package redis.clients.jedis;
 
-import redis.clients.jedis.JedisCluster.Reset;
-import redis.clients.jedis.params.geo.GeoRadiusParam;
-import redis.clients.jedis.params.sortedset.ZAddParams;
-import redis.clients.jedis.params.sortedset.ZIncrByParams;
-import redis.clients.util.SafeEncoder;
+import static redis.clients.jedis.Protocol.toByteArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +12,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
-import static redis.clients.jedis.Protocol.toByteArray;
+import redis.clients.jedis.JedisCluster.Reset;
+import redis.clients.jedis.params.geo.GeoRadiusParam;
+import redis.clients.jedis.params.sortedset.ZAddParams;
+import redis.clients.jedis.params.sortedset.ZIncrByParams;
+import redis.clients.util.SafeEncoder;
 
 public class Client extends BinaryClient implements Commands {
 
@@ -1141,5 +1141,25 @@ public class Client extends BinaryClient implements Commands {
   public void bitfield(final String key, final String... arguments) {
     bitfield(SafeEncoder.encode(key), SafeEncoder.encodeMany(arguments));
   }
+  
+	public void kpop(final String key, final String partition, final String offset) {
+		if (partition == null || offset == null) {
+			kpop(SafeEncoder.encode(key));
+		} else {
+			kpop(SafeEncoder.encode(key), SafeEncoder.encodeMany(partition, offset));
+		}
+	}
+	
+	public void kpush(final String key, final String value) {
+		kpush(SafeEncoder.encode(key), SafeEncoder.encode(value));
+	}
+	
+	public void kpartitions(final String key) {
+		kpartitions(SafeEncoder.encode(key));
+	}
+	
+	public void koffset(final String key, final String partition, final String timestamps) {
+		koffset(SafeEncoder.encode(key), SafeEncoder.encodeMany(partition, timestamps));
+	}
 
 }

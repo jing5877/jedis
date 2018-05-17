@@ -3634,5 +3634,65 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     client.bitfield(key, arguments);
     return client.getIntegerMultiBulkReply();
   }
-
+  
+	public List<String> kpop(final String key, final String partition, final String offset) {
+		checkIsInMultiOrPipeline();
+		client.kpop(key, partition, offset);
+		client.setTimeoutInfinite();
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public List<String> kpop(final String key) {
+		return kpop(key, null, null);
+	}
+	
+	public List<String> kpush(final String key, final String value) {
+		checkIsInMultiOrPipeline();
+		client.kpush(key, value);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public List<String> kpartitions(final String key) {
+		checkIsInMultiOrPipeline();
+		client.kpartitions(key);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public List<String> koffset(final String key, final String partition, final String timestamps) {
+		checkIsInMultiOrPipeline();
+		client.koffset(key, partition, timestamps);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public static void main(String[] args) {
+		Jedis jedis = new Jedis("127.0.0.1", 8066);
+		jedis.auth("pwd05");
+		System.out.println(jedis.kpush("test6","222"));
+		System.out.println(jedis.kpop("test6"));
+		System.out.println(jedis.kpop("test6", "0", "15"));
+		System.out.println(jedis.kpartitions("test6"));
+		System.out.println(jedis.koffset("test6", "0", "-1"));
+	}
 }
