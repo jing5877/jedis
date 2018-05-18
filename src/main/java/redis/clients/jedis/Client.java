@@ -1142,12 +1142,16 @@ public class Client extends BinaryClient implements Commands {
     bitfield(SafeEncoder.encode(key), SafeEncoder.encodeMany(arguments));
   }
   
-	public void kpop(final String key, final String partition, final String offset) {
-		if (partition == null || offset == null) {
-			kpop(SafeEncoder.encode(key));
-		} else {
-			kpop(SafeEncoder.encode(key), SafeEncoder.encodeMany(partition, offset));
-		}
+	public void kpop(final String key) {
+		kpop(SafeEncoder.encode(key));
+	}
+	
+	public void kpop(final String key, int partition, int offset) {
+		kpop(SafeEncoder.encode(key), toByteArray(partition), toByteArray(offset));
+	}
+	
+	public void kpop(final String key, int partition, int offset, int max) {
+		kpop(SafeEncoder.encode(key), toByteArray(partition), toByteArray(offset), toByteArray(max));
 	}
 	
 	public void kpush(final String key, final String value) {

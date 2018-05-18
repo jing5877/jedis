@@ -1,5 +1,18 @@
 package redis.clients.jedis;
 
+import java.net.URI;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.JedisCluster.Reset;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
@@ -8,14 +21,6 @@ import redis.clients.jedis.params.sortedset.ZIncrByParams;
 import redis.clients.util.Pool;
 import redis.clients.util.SafeEncoder;
 import redis.clients.util.Slowlog;
-
-import java.net.URI;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
 
 public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommands,
     AdvancedJedisCommands, ScriptingCommands, BasicCommands, ClusterCommands, SentinelCommands {
@@ -3635,7 +3640,30 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getIntegerMultiBulkReply();
   }
   
-	public List<String> kpop(final String key, final String partition, final String offset) {
+	public List<String> kpush(final String key, final String value) {
+		checkIsInMultiOrPipeline();
+		client.kpush(key, value);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public List<String> kpop(final String key){
+		checkIsInMultiOrPipeline();
+		client.kpop(key);
+		client.setTimeoutInfinite();
+		try {
+			return client.getMultiBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public List<String> kpop(final String key, int partition, int offset) {
 		checkIsInMultiOrPipeline();
 		client.kpop(key, partition, offset);
 		client.setTimeoutInfinite();
@@ -3646,15 +3674,10 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
 		}
 	}
 	
-	public List<String> kpop(final String key) {
-		return kpop(key, null, null);
-	}
-	
-	public List<String> kpush(final String key, final String value) {
+	public List<String> kpop(final String key, int partition, int offset, int max){
 		checkIsInMultiOrPipeline();
-		client.kpush(key, value);
+		client.kpop(key, partition, offset, max);
 		client.setTimeoutInfinite();
-		
 		try {
 			return client.getMultiBulkReply();
 		} finally {
@@ -3691,7 +3714,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
 		jedis.auth("pwd05");
 		System.out.println(jedis.kpush("test6","222"));
 		System.out.println(jedis.kpop("test6"));
-		System.out.println(jedis.kpop("test6", "0", "15"));
+		System.out.println(jedis.kpop("test6", 0, 15));
 		System.out.println(jedis.kpartitions("test6"));
 		System.out.println(jedis.koffset("test6", "0", "-1"));
 	}
