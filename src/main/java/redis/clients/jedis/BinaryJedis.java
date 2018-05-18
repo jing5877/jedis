@@ -3847,4 +3847,32 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     client.hstrlen(key, field);
     return client.getIntegerReply();
   }
+
+@Override
+public List<String> kpush(byte[] key, byte[] value) {
+	checkIsInMultiOrPipeline();
+	client.kpush(key, value);
+	return client.getMultiBulkReply();
+}
+
+@Override
+public List<String> kpop(byte[] key) {
+	checkIsInMultiOrPipeline();
+	client.kpop(key);
+	return client.getMultiBulkReply();
+}
+
+@Override
+public List<String> kpop(byte[] key, int partition, int offset) {
+	checkIsInMultiOrPipeline();
+	client.kpop(key, partition, offset);
+	return client.getMultiBulkReply();
+}
+
+@Override
+public List<String> kpop(byte[] key, int partition, int offset, int max) {
+	checkIsInMultiOrPipeline();
+	client.kpop(key, partition, offset, max);
+	return client.getMultiBulkReply();
+}
 }

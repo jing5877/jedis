@@ -108,7 +108,7 @@ public interface BinaryJedisCommands {
   Long rpush(byte[] key, byte[]... args);
 
   Long lpush(byte[] key, byte[]... args);
-
+  
   Long llen(byte[] key);
 
   List<byte[]> lrange(byte[] key, long start, long stop);
@@ -124,7 +124,7 @@ public interface BinaryJedisCommands {
   byte[] lpop(byte[] key);
 
   byte[] rpop(byte[] key);
-
+  
   Long sadd(byte[] key, byte[]... member);
 
   Set<byte[]> smembers(byte[] key);
@@ -308,5 +308,15 @@ public interface BinaryJedisCommands {
    * @return lenth of the value for key
    */
   Long hstrlen(byte[] key, byte[] field);
+  
+  //kafka
+  
+  List<String> kpush(byte[] key, byte[] value);
+  
+  List<String> kpop(byte[] key);
+  
+  List<String> kpop(byte[] key, int partition, int offset);
+  
+  List<String> kpop(byte[] key, int partition, int offset, int max);
 
 }

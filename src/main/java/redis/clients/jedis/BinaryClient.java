@@ -22,7 +22,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
-import redis.clients.jedis.Protocol.Command;
 import redis.clients.jedis.Protocol.Keyword;
 import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.SetParams;
@@ -1202,4 +1201,21 @@ public class BinaryClient extends Connection {
   public void hstrlen(final byte[] key, final byte[] field) {
     sendCommand(HSTRLEN, key, field);
   }
+  
+  public void kpush(final byte[] key, final byte[] value) {
+	  sendCommand(KPUSH, key, value);
+  }
+  
+  public void kpop(final byte[] key) {
+	  sendCommand(KPOP, key);
+  }
+
+  public void kpop(final byte[] key, int partition, int offset) {
+	  sendCommand(KPOP, key, toByteArray(partition), toByteArray(offset));
+  }
+  
+  public void kpop(final byte[] key, int partition, int offset, int max ) {
+	  sendCommand(KPOP, key, toByteArray(partition), toByteArray(offset), toByteArray(max));
+  }
+
 }
