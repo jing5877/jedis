@@ -73,6 +73,21 @@ public class KafkaCommandsTest {
 		}
 	}
 	
+	@Test
+	public void testKconsumeoffset() {
+		
+		String rtn = jedis.kconsumeoffset(topic, 1);
+		System.out.println(rtn);
+		
+	}
+	
+	@Test
+	public void testKreturnoffset() {
+		
+		String rtn = jedis.kreturnoffset(topic, 1, 0);
+		System.out.println(rtn);
+	}
+	
 	
 	public void printList(List<String> strs) {
 		

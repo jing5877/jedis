@@ -3709,6 +3709,32 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
 		}
 	}
 	
+	public String kconsumeoffset(final String key, final int partition){
+		
+		checkIsInMultiOrPipeline();
+		client.kconsumeoffset(key, partition);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
+	public String kreturnoffset(final String key, final int partition, final int offset){
+		
+		checkIsInMultiOrPipeline();
+		client.kreturnoffset(key, partition, offset);
+		client.setTimeoutInfinite();
+		
+		try {
+			return client.getBulkReply();
+		} finally {
+			client.rollbackTimeout();
+		}
+	}
+	
 	public static void main(String[] args) {
 		Jedis jedis = new Jedis("127.0.0.1", 8066);
 		jedis.auth("pwd05");

@@ -1328,4 +1328,12 @@ public class BinaryClient extends Connection {
   public void bitfield(final byte[] key, final byte[]... value) {
     sendCommand(BITFIELD, joinParameters(key, value));
   }
+  
+  public void kconsumeoffset(final byte[] key, final byte[]... value) {
+	  sendCommand(KCONSUMEOFFSET, joinParameters(key, value));
+  }
+  
+  public void kreturnoffset(final byte[] key, final byte[]... value) {
+	  sendCommand(KRETURNOFFSET, joinParameters(key, value));
+  }
 }

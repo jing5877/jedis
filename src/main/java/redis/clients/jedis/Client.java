@@ -1165,5 +1165,13 @@ public class Client extends BinaryClient implements Commands {
 	public void koffset(final String key, final String partition, final String timestamps) {
 		koffset(SafeEncoder.encode(key), SafeEncoder.encodeMany(partition, timestamps));
 	}
+	
+	public void kconsumeoffset(final String key, final int partition) {
+		kconsumeoffset(SafeEncoder.encode(key), toByteArray(partition));
+	}
+	
+	public void kreturnoffset(final String key, final int partition, final int offset) {
+		kconsumeoffset(SafeEncoder.encode(key), toByteArray(partition), toByteArray(offset));
+	}
 
 }
